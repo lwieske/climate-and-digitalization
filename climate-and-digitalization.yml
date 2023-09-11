@@ -1,0 +1,15 @@
+name: climate-and-digitalization
+dependencies:
+  - python
+  - pip
+  - jupyter
+  - matplotlib
+  - numpy
+  - pandas
+  - xlrd
+  - cdsapi
+  - xarray
+  - netCDF4
+  - dask
+  - cartopy
+  

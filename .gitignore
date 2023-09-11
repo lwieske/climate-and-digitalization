@@ -1,0 +1,7 @@
+.vscode/**
+data/cmip6/*.json
+data/cmip6/*.nc
+data/cmip6/*.png
+data/cmip6/*.zip
+data/*.csv
+data/*.xlsx
