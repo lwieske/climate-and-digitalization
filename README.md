@@ -16,7 +16,7 @@ import functools
 import cdsapi
 
 import matplotlib.pyplot as plt
-from matplotlib.dates import MonthLocator, YearLocator
+import matplotlib.colors as mcolors
 ```
 
 
@@ -71,6 +71,7 @@ def finalize_plot(plt, title, credits, filename):
     plt.grid()
 
     plt.savefig(f'images/{filename}.png')
+    plt.savefig(f'images/svg/{filename}.svg')
 
     plt.show()
 ```
@@ -120,8 +121,6 @@ plt.axhline(y = 0.0, color = 'r', linestyle = 'dashed')
 plt.xlabel('Year', size = 18)
 plt.ylabel('Anomaly (°C)', size = 18)
 
-plt.title('HadCRUT5 - Annual Temperature Anomalies Relative to 1850-1900 Mean', size = 24)
-
 plt.annotate(
     "Paris 1.5°C",
     xy=(0.98, 0.82),
@@ -142,20 +141,11 @@ plt.annotate(
     verticalalignment="bottom",
 )
 
-plt.annotate(
-    "Current ({0}): {1:+.2f}°C".format(current_year, current_anomaly),
-    xy=(0.98, 0.03),
-    xycoords="axes fraction",
-    fontsize=18,
-    horizontalalignment="right",
-    verticalalignment="bottom",
+finalize_plot(plt,
+    'HadCRUT5 - Annual Temperature Anomalies Relative to 1850-1900 Mean',
+    'Data: Met Office Hadley Centre   github:lwieske/climate-and-digitalization',
+    'hadcrut5_annual_temperature_anomalies_relative_mean',
 )
-
-plt.grid()
-
-plt.savefig('images/global_annual_average_temperature.png')
-
-plt.show()
 ```
 
 
@@ -179,105 +169,12 @@ maunaloa = pd.read_csv('data/weekly_in_situ_co2_mlo.csv',
 ```python
 df = maunaloa
 
-df = df.loc['1960-01-01' <= df['Date']]
-
-df['Date'] = pd.to_datetime(df['Date'])
+df = df['1960-01-01' <= df['Date']]
 
 df = df.set_index('Date')
+
+df.index = pd.to_datetime(df.index)
 ```
-
-    /var/folders/9l/cxd0cbfj6lb818p2160bvf0h0000gn/T/ipykernel_2606/3225452583.py:5: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame.
-    Try using .loc[row_indexer,col_indexer] = value instead
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df['Date'] = pd.to_datetime(df['Date'])
-
-
-
-```python
-df
-```
-
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>CO2</th>
-    </tr>
-    <tr>
-      <th>Date</th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>1960-01-02</th>
-      <td>315.72</td>
-    </tr>
-    <tr>
-      <th>1960-01-09</th>
-      <td>316.40</td>
-    </tr>
-    <tr>
-      <th>1960-01-16</th>
-      <td>316.73</td>
-    </tr>
-    <tr>
-      <th>1960-01-23</th>
-      <td>316.57</td>
-    </tr>
-    <tr>
-      <th>1960-01-30</th>
-      <td>316.68</td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td>...</td>
-    </tr>
-    <tr>
-      <th>2023-06-03</th>
-      <td>424.40</td>
-    </tr>
-    <tr>
-      <th>2023-06-10</th>
-      <td>424.01</td>
-    </tr>
-    <tr>
-      <th>2023-06-17</th>
-      <td>422.93</td>
-    </tr>
-    <tr>
-      <th>2023-06-24</th>
-      <td>422.21</td>
-    </tr>
-    <tr>
-      <th>2023-07-01</th>
-      <td>422.80</td>
-    </tr>
-  </tbody>
-</table>
-<p>3259 rows × 1 columns</p>
-</div>
-
-
 
 
 ```python
@@ -306,14 +203,238 @@ finalize_plot(plt,
 
 
     
-![png](README_files/README_11_0.png)
+![png](README_files/README_10_0.png)
+    
+
+
+# Global Digital Economy Emissions / Schneider Projections
+
+## Global Digital Economy Emissions 2023
+
+
+```python
+schneider_projections = ({
+    'Portion':[
+        'Compute',
+        'Storage',
+        'DC infrastructures',
+        'Fixed networks',
+        'Mobile networks',
+        'IT devices use',
+        'Network equipment use',
+        'IoT devices use',
+        'TVs and peripherals use',
+        'Device manufacturing',
+    ],
+    '2023': [
+         69,
+         17,
+        111,
+         97,
+         62,
+         78,
+         65,
+         45,
+        198,
+        264,
+    ],
+    '2030': [
+        125,
+         41,
+        106,
+         90,
+        155,
+         54,
+         87,
+        110,
+        146,
+        287,
+    ]
+})
+
+# Share of global energy-related emissions    |  2.8% |  3.0% |  3.4%
+```
+
+
+```python
+df = pd.DataFrame(schneider_projections)
+
+df = df.set_index('Portion')
+
+df = df.rename(index={
+    'DC infrastructures':      'DCs',
+    'Device manufacturing':    'Devices',
+    'Mobile networks':         '2G-5G',
+    'TVs and peripherals use': 'TVs ETAL',
+})
+
+total2023           = sum(df['2023'])
+pieDict2023         = df.nlargest(3,['2023'])[['2023']].to_dict()['2023']
+rest2023            = total2023 - sum(pieDict2023.values())
+pieDict2023['Rest'] = total2023
+
+total2030           = sum(df['2030'])
+pieDict2030         = df.nlargest(3,['2030'])[['2030']].to_dict()['2030']
+rest2030            = total2030 - sum(pieDict2030.values())
+pieDict2030['Rest'] = total2030
+```
+
+
+```python
+plt.rcParams["figure.figsize"] = (16,9)
+
+def func(pct, allvals):
+    absolute = int(np.round(pct/100.*total2023))
+    return f"{pct:.1f}%\n({absolute:d} MtCO2)"
+
+plt.pie(
+    pieDict2023.values(),
+    labels=pieDict2023.keys(),
+    autopct=lambda pct: func(pct, pieDict2023.values()),
+    pctdistance=0.8,
+    wedgeprops={'width':0.4},
+    startangle = 180,
+)
+
+plt.text(0, 0, f'Total: {total2023} MtCO2',
+    size=18,
+    ha='center',
+    va='center',    
+)
+
+finalize_plot(plt,
+    'Global Digital Economy Emissions (2023)',
+    'Data: Schneider Electric   github:lwieske/climate-and-digitalization',
+    'global_schneider_digital_economy_2023',
+)
+```
+
+
+    
+![png](README_files/README_15_0.png)
+    
+
+
+## Global Digital Economy Emissions 2030
+
+
+```python
+plt.rcParams["figure.figsize"] = (16,9)
+
+def func(pct, allvals):
+    absolute = int(np.round(pct/100.*total2030))
+    return f"{pct:.1f}%\n({absolute:d} MtCO2)"
+
+plt.pie(
+    pieDict2030.values(),
+    labels=pieDict2030.keys(),
+    autopct=lambda pct: func(pct, pieDict2030.values()),
+    pctdistance=0.8,
+    wedgeprops={'width':0.4},
+    startangle = 180,
+)
+
+plt.text(0, 0, f'Total: {total2030} MtCO2',
+    size=18,
+    ha='center',
+    va='center',    
+)
+
+finalize_plot(plt,
+    'Global Digital Economy Emissions (2030)',
+    'Data: Schneider Electric   github:lwieske/climate-and-digitalization',
+    'global_schneider_digital_economy_2030',
+)
+
+plt.show()
+```
+
+
+    
+![png](README_files/README_17_0.png)
     
 
 
 
 ```python
+plt.rcParams["figure.figsize"] = (16,9)
+plt.rcParams["figure.autolayout"] = True
 
+fig, (ax1, ax2) = plt.subplots(1, 2)
+
+fig.suptitle('Global Digital Economy Emissions / Electric Schneider Projections', size=24)
+
+def func2023(pct, allvals):
+    absolute = int(np.round(pct/100.*total2023))
+    return f"{pct:.1f}%\n({absolute:d} MtCO2)"
+
+ax1.pie(
+    pieDict2023.values(),
+    labels=pieDict2023.keys(),
+    colors=[
+        mcolors.TABLEAU_COLORS['tab:blue'],
+        mcolors.TABLEAU_COLORS['tab:green'],
+        mcolors.TABLEAU_COLORS['tab:orange'],
+        mcolors.TABLEAU_COLORS['tab:gray'],
+    ],
+    autopct=lambda pct: func2023(pct, pieDict2023.values()),
+    pctdistance=0.8,
+    wedgeprops={'width':0.4},
+    startangle = 180,
+)
+
+ax1.text(0, 0, f'Total: {total2023} MtCO2',
+    size=18,
+    ha='center',
+    va='center',    
+)
+
+ax1.set_title(f'\n2023', size=24)
+
+def func2030(pct, allvals):
+    absolute = int(np.round(pct/100.*total2030))
+    return f"{pct:.1f}%\n({absolute:d} MtCO2)"
+
+ax2.pie(
+    pieDict2030.values(),
+    labels=pieDict2030.keys(),
+    colors=[
+        mcolors.TABLEAU_COLORS['tab:blue'],
+        mcolors.TABLEAU_COLORS['tab:red'],
+        mcolors.TABLEAU_COLORS['tab:green'],
+        mcolors.TABLEAU_COLORS['tab:gray'],
+    ],
+    autopct=lambda pct: func2030(pct, pieDict2030.values()),
+    pctdistance=0.8,
+    wedgeprops={'width':0.4},
+    startangle = 180,
+)
+
+ax2.text(0, 0, f'Total: {total2030} MtCO2',
+    size=18,
+    ha='center',
+    va='center',    
+)
+
+ax2.set_title('2030', size=24)
+
+fig.text(0.99, 0.02, 
+        'Data: Schneider Electric   github:lwieske/climate-and-digitalization', 
+        fontsize=8, color='black',
+        ha="right", va="bottom",
+        bbox=dict(boxstyle="square", facecolor='white', edgecolor='none',)
+)
+
+plt.savefig('images/svg/global_schneider_digital_economy.svg')
+
+plt.show()
 ```
+
+
+    
+![png](README_files/README_18_0.png)
+    
+
 
 ![Global Average Temperature (°C) Relative To1850-1900](https://www.metoffice.gov.uk/binaries/content/gallery/metofficegovuk/images/research/news/2020/hadcrut5_timeseries_comparison.png)
 
@@ -359,13 +480,13 @@ ax2.legend(loc='upper left')
 finalize_plot(plt,
     'NOAA Annual Greenhouse Gas Index',
     'Data: OurWorldInData   github:lwieske/climate-and-digitalization',
-    'NOAA_annual_greenhouse_gas_index',
+    'noaa_annual_greenhouse_gas_index',
 )
 ```
 
 
     
-![png](README_files/README_17_0.png)
+![png](README_files/README_23_0.png)
     
 
 
@@ -425,7 +546,7 @@ finalize_plot(plt,
 
 
     
-![png](README_files/README_23_0.png)
+![png](README_files/README_29_0.png)
     
 
 
@@ -487,7 +608,7 @@ finalize_plot(plt,
 
 
     
-![png](README_files/README_26_0.png)
+![png](README_files/README_32_0.png)
     
 
 
@@ -520,6 +641,21 @@ pieDict['Rest'] = total - sum(pieDict.values())
 
 
 ```python
+pieDict
+```
+
+
+
+
+    {'China': 43873.07,
+     'Europe': 30166.586,
+     'North America': 32593.902,
+     'Rest': 59312.59799999998}
+
+
+
+
+```python
 plt.rcParams["figure.figsize"] = (16,9)
 
 def func(pct, allvals):
@@ -543,7 +679,7 @@ finalize_plot(plt,
 
 
     
-![png](README_files/README_30_0.png)
+![png](README_files/README_37_0.png)
     
 
 
@@ -606,7 +742,7 @@ finalize_plot(plt,
 
 
     
-![png](README_files/README_33_0.png)
+![png](README_files/README_40_0.png)
     
 
 
@@ -664,7 +800,7 @@ finalize_plot(plt,
 
 
     
-![png](README_files/README_38_0.png)
+![png](README_files/README_45_0.png)
     
 
 
@@ -732,7 +868,7 @@ finalize_plot(plt,
 
 
     
-![png](README_files/README_41_0.png)
+![png](README_files/README_48_0.png)
     
 
 
@@ -788,7 +924,7 @@ finalize_plot(plt,
 
 
     
-![png](README_files/README_45_0.png)
+![png](README_files/README_52_0.png)
     
 
 
@@ -855,7 +991,7 @@ finalize_plot(plt,
 
 
     
-![png](README_files/README_48_0.png)
+![png](README_files/README_55_0.png)
     
 
 
@@ -944,14 +1080,14 @@ plt.ylabel("Percentage (%)", size = 18)
 
 finalize_plot(plt,
     'Annual Change GDP Per Capita vs CO2 Per Capita (Germany)',
-    'Data: WorldBank + OurWorldInData\ngithub:lwieske/climate-and-digitalization',
+    'Data: WorldBank + OurWorldInData   github:lwieske/climate-and-digitalization',
     'germany_annual_change_gdp_vs_co2_per_capita',
 )
 ```
 
 
     
-![png](README_files/README_57_0.png)
+![png](README_files/README_64_0.png)
     
 
 
@@ -1125,14 +1261,14 @@ ax.legend(handles, labels, loc='upper left')
 
 finalize_plot(plt,
     'CMIP6 Projection: Ensemble Mean Surface Air Temperature 1850 to 2100',
-    'Data: Copernicus CDS\ngithub:lwieske/climate-and-digitalization',
+    'Data: Copernicus CDS   github:lwieske/climate-and-digitalization',
     'cmip6_ensemble_mean_surface_air_temperature',
 )
 ```
 
 
     
-![png](README_files/README_65_0.png)
+![png](README_files/README_72_0.png)
     
 
 

@@ -1,3 +1,4 @@
+**/.DS_Store
 .vscode/**
 data/cmip6/*.json
 data/cmip6/*.nc
