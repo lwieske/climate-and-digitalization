@@ -17,6 +17,8 @@ import cdsapi
 
 import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
+
+from PIL import Image
 ```
 
 
@@ -641,21 +643,6 @@ pieDict['Rest'] = total - sum(pieDict.values())
 
 
 ```python
-pieDict
-```
-
-
-
-
-    {'China': 43873.07,
-     'Europe': 30166.586,
-     'North America': 32593.902,
-     'Rest': 59312.59799999998}
-
-
-
-
-```python
 plt.rcParams["figure.figsize"] = (16,9)
 
 def func(pct, allvals):
@@ -679,7 +666,7 @@ finalize_plot(plt,
 
 
     
-![png](README_files/README_37_0.png)
+![png](README_files/README_36_0.png)
     
 
 
@@ -742,7 +729,7 @@ finalize_plot(plt,
 
 
     
-![png](README_files/README_40_0.png)
+![png](README_files/README_39_0.png)
     
 
 
@@ -800,7 +787,7 @@ finalize_plot(plt,
 
 
     
-![png](README_files/README_45_0.png)
+![png](README_files/README_44_0.png)
     
 
 
@@ -868,7 +855,7 @@ finalize_plot(plt,
 
 
     
-![png](README_files/README_48_0.png)
+![png](README_files/README_47_0.png)
     
 
 
@@ -924,7 +911,7 @@ finalize_plot(plt,
 
 
     
-![png](README_files/README_52_0.png)
+![png](README_files/README_51_0.png)
     
 
 
@@ -991,7 +978,7 @@ finalize_plot(plt,
 
 
     
-![png](README_files/README_55_0.png)
+![png](README_files/README_54_0.png)
     
 
 
@@ -1087,7 +1074,7 @@ finalize_plot(plt,
 
 
     
-![png](README_files/README_64_0.png)
+![png](README_files/README_63_0.png)
     
 
 
@@ -1268,10 +1255,14 @@ finalize_plot(plt,
 
 
     
-![png](README_files/README_72_0.png)
+![png](README_files/README_71_0.png)
     
 
 
 # GHG Emissions aggregated By Sector
 
 ![Global GHG Emissions By Sector](https://ourworldindata.org/uploads/2020/09/Emissions-by-sector-–-pie-charts.png)
+
+[Planetary Boundaries / September 2023](https://upload.wikimedia.org/wikipedia/commons/f/f5/PBs2023.svg)
+
+<img src = "https://upload.wikimedia.org/wikipedia/commons/f/f5/PBs2023.svg" style="background-color:white;"/>
