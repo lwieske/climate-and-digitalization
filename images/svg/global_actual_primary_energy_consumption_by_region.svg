@@ -6,7 +6,7 @@
   <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:Work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
-    <dc:date>2023-09-15T14:36:38.882052</dc:date>
+    <dc:date>2023-10-03T21:06:43.320211</dc:date>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:Agent>
@@ -987,14 +987,6 @@ z
     </g>
    </g>
    <g id="text_9">
-    <g id="patch_6">
-     <path d="M 610.107737 627.556725 
-L 873.460237 627.556725 
-L 873.460237 615.014225 
-L 610.107737 615.014225 
-z
-" style="fill: #ffffff"/>
-    </g>
     <!-- Data: OurWorldInData / github:lwieske/climate-and-digitalization -->
     <g transform="translate(612.507737 623.492975) scale(0.08 -0.08)">
      <defs>

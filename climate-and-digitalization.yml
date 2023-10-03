@@ -1,4 +1,7 @@
 name: climate-and-digitalization
+channels:
+  - pytorch
+  - defaults
 dependencies:
   - python
   - pip
@@ -7,7 +10,8 @@ dependencies:
   - numpy
   - pandas
   - xlrd
-  - cdsapi
+  - pip:
+    - cdsapi
   - xarray
   - netCDF4
   - dask
