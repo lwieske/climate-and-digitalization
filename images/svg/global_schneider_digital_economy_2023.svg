@@ -6,7 +6,7 @@
   <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:Work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
-    <dc:date>2023-10-03T21:06:41.437973</dc:date>
+    <dc:date>2023-10-12T23:26:53.897499</dc:date>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:Agent>
@@ -918,6 +918,14 @@ z
     </g>
    </g>
    <g id="text_10">
+    <g id="patch_6">
+     <path d="M 602.132737 627.556725 
+L 873.460237 627.556725 
+L 873.460237 615.014225 
+L 602.132737 615.014225 
+z
+" style="fill: #ffffff"/>
+    </g>
     <!-- Data: Schneider Electric   github:lwieske/climate-and-digitalization -->
     <g transform="translate(604.532737 623.492975) scale(0.08 -0.08)">
      <defs>
